@@ -40,11 +40,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         phoneDisplayer = findViewById(R.id.numberDisplayer)
         phoneDisplayer.layoutManager = LinearLayoutManager(this)
         mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         getPermission()
-
 
 
     }
@@ -59,24 +59,24 @@ class MainActivity : AppCompatActivity() {
     private fun getPermission() {
         if ((ContextCompat.checkSelfPermission
                 (this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) &&
-            (ContextCompat.checkSelfPermission
+                (ContextCompat.checkSelfPermission
                 (this, Manifest.permission.WRITE_CONTACTS) != PackageManager.PERMISSION_GRANTED)
-            && (ContextCompat.checkSelfPermission
+                && (ContextCompat.checkSelfPermission
                 (this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED)
-            && (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.READ_CALL_LOG
-            ) != PackageManager.PERMISSION_GRANTED)
+                && (ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.READ_CALL_LOG
+                ) != PackageManager.PERMISSION_GRANTED)
         ) {
             ActivityCompat.requestPermissions(
-                this,
-                arrayOf(
-                    Manifest.permission.READ_CONTACTS,
-                    Manifest.permission.WRITE_CONTACTS,
-                    Manifest.permission.READ_PHONE_STATE,
-                    Manifest.permission.READ_CALL_LOG
-                ),
-                100
+                    this,
+                    arrayOf(
+                            Manifest.permission.READ_CONTACTS,
+                            Manifest.permission.WRITE_CONTACTS,
+                            Manifest.permission.READ_PHONE_STATE,
+                            Manifest.permission.READ_CALL_LOG
+                    ),
+                    100
             )
 
         } else {
@@ -86,9 +86,9 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
+            requestCode: Int,
+            permissions: Array<out String>,
+            grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
@@ -108,37 +108,37 @@ class MainActivity : AppCompatActivity() {
     private fun getContactList() {
         val cr = contentResolver
         val cur: Cursor? = cr.query(
-            ContactsContract.Contacts.CONTENT_URI,
-            null, null, null, null
+                ContactsContract.Contacts.CONTENT_URI,
+                null, null, null, null
         )
         if ((cur?.count ?: 0) > 0) {
             while (cur != null && cur.moveToNext()) {
                 val id: String = cur.getString(
-                    cur.getColumnIndex(ContactsContract.Contacts._ID)
+                        cur.getColumnIndex(ContactsContract.Contacts._ID)
                 )
                 val name: String = cur.getString(
-                    cur.getColumnIndex(
-                        ContactsContract.Contacts.DISPLAY_NAME
-                    )
+                        cur.getColumnIndex(
+                                ContactsContract.Contacts.DISPLAY_NAME
+                        )
                 )
                 if (cur.getInt(
-                        cur.getColumnIndex(
-                            ContactsContract.Contacts.HAS_PHONE_NUMBER
-                        )
-                    ) > 0
+                                cur.getColumnIndex(
+                                        ContactsContract.Contacts.HAS_PHONE_NUMBER
+                                )
+                        ) > 0
                 ) {
                     val pCur: Cursor? = cr.query(
-                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                        null,
-                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                        arrayOf(id),
-                        null
+                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                            null,
+                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                            arrayOf(id),
+                            null
                     )
                     while (pCur!!.moveToNext()) {
                         val phoneNo: String = pCur.getString(
-                            pCur.getColumnIndex(
-                                ContactsContract.CommonDataKinds.Phone.NUMBER
-                            )
+                                pCur.getColumnIndex(
+                                        ContactsContract.CommonDataKinds.Phone.NUMBER
+                                )
                         )
                         val displayModel = DisplayModel(name, phoneNo)
                         abc.add(displayModel)
@@ -161,19 +161,19 @@ class MainActivity : AppCompatActivity() {
 
     fun deleteContact(ctx: Context, phone: String?, name: String?): Boolean {
         val contactUri: Uri =
-            Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phone))
+                Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phone))
         val cur: Cursor = ctx.contentResolver.query(contactUri, null, null, null, null)!!
         try {
             if (cur.moveToFirst()) {
                 do {
                     if (cur.getString(cur.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME))
-                            .equals(name)
+                                    .equals(name)
                     ) {
                         val lookupKey: String =
-                            cur.getString(cur.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY))
+                                cur.getString(cur.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY))
                         val uri: Uri = Uri.withAppendedPath(
-                            ContactsContract.Contacts.CONTENT_LOOKUP_URI,
-                            lookupKey
+                                ContactsContract.Contacts.CONTENT_LOOKUP_URI,
+                                lookupKey
                         )
                         ctx.contentResolver.delete(uri, null, null)
                         return true
@@ -205,6 +205,7 @@ class MainActivity : AppCompatActivity() {
 
         blockText!!.setOnClickListener {
             mainViewModel.setNumber(abc[position].number)
+            deleteDialog.dismiss()
 
         }
 

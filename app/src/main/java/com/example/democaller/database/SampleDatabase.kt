@@ -17,9 +17,9 @@ abstract class SampleDatabase : RoomDatabase() {
         fun getInstance(context: Context): SampleDatabase? {
             if (detailDatabase == null) {
                 detailDatabase = Room.databaseBuilder(
-                    context.applicationContext,
-                    SampleDatabase::class.java,
-                    dbName
+                        context.applicationContext,
+                        SampleDatabase::class.java,
+                        dbName
                 ).fallbackToDestructiveMigration().build()
             }
             return detailDatabase

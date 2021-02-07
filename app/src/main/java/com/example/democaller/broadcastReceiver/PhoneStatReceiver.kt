@@ -13,7 +13,7 @@ import android.util.Log
 class PhoneStatReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val telephoneManager: TelephonyManager =
-            context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+                context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         telephoneManager.listen(
             MyPhoneState(
                 context,

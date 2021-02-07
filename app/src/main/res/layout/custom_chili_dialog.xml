@@ -2,28 +2,28 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:paddingTop="10dp"
-    android:paddingBottom="10dp"
-    android:layout_height="wrap_content">
+    android:paddingBottom="10dp">
 
     <TextView
         android:id="@+id/deleteKeyword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:text="Delete"
         android:textSize="20sp"
-        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@id/border"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/border"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
+        android:id="@+id/border"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="@color/black"
-        android:id="@+id/border"
         app:layout_constraintBottom_toTopOf="@id/blockKey"
         app:layout_constraintTop_toBottomOf="@id/deleteKeyword" />
 
@@ -31,8 +31,8 @@
         android:id="@+id/blockKey"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:text="Block"
         android:textSize="20sp"
 
