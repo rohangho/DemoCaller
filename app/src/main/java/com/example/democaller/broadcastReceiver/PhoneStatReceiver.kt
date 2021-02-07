@@ -1,17 +1,13 @@
-package com.example.democaller
+package com.example.democaller.broadcastReceiver
 
 import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Context.TELECOM_SERVICE
 import android.content.Intent
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import android.telephony.TelephonyManager.CALL_STATE_IDLE
 import android.telephony.TelephonyManager.CALL_STATE_RINGING
 import android.util.Log
-import android.widget.Toast
-import java.lang.reflect.Method
-import kotlin.text.Typography.tm
 
 
 class PhoneStatReceiver : BroadcastReceiver() {
