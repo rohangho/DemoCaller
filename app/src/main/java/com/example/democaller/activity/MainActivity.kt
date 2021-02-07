@@ -12,10 +12,12 @@ import android.provider.ContactsContract
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.democaller.R
@@ -23,6 +25,7 @@ import com.example.democaller.adapter.PhoneDisplayerAdapter
 import com.example.democaller.broadcastReceiver.PhoneStatReceiver
 import com.example.democaller.model.DisplayModel
 import com.example.democaller.utility.OnSelectItem
+import com.example.democaller.viewmodel.MainViewModel
 
 
 class MainActivity : AppCompatActivity() {
@@ -31,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var phoneDisplayer: RecyclerView
     private var abc: ArrayList<DisplayModel> = ArrayList()
     private lateinit var phoneDisplayerAdapter: PhoneDisplayerAdapter
+    private lateinit var mainViewModel: MainViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +42,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         phoneDisplayer = findViewById(R.id.numberDisplayer)
         phoneDisplayer.layoutManager = LinearLayoutManager(this)
+        mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         getPermission()
+
 
 
     }
@@ -188,6 +194,20 @@ class MainActivity : AppCompatActivity() {
         val deleteDialog = AlertDialog.Builder(this).create()
         deleteDialog.setView(deleteDialogView)
         deleteDialog.show()
+
+        val deleteText = deleteDialog.findViewById<TextView>(R.id.deleteKeyword)
+        val blockText = deleteDialog.findViewById<TextView>(R.id.blockKey)
+
+        deleteText!!.setOnClickListener {
+            deleteContact(this, abc[position].number, abc[position].name)
+            deleteDialog.dismiss()
+        }
+
+        blockText!!.setOnClickListener {
+            mainViewModel.setNumber(abc[position].number)
+
+        }
+
     }
 
 
