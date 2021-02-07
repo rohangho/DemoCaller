@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.democaller.R
 
+
 class AddContact : AppCompatActivity() {
 
     private lateinit var name: EditText

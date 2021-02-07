@@ -1,14 +1,18 @@
 package com.example.democaller.activity
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.database.Cursor
+import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -18,6 +22,7 @@ import com.example.democaller.R
 import com.example.democaller.adapter.PhoneDisplayerAdapter
 import com.example.democaller.broadcastReceiver.PhoneStatReceiver
 import com.example.democaller.model.DisplayModel
+import com.example.democaller.utility.OnSelectItem
 
 
 class MainActivity : AppCompatActivity() {
@@ -137,11 +142,54 @@ class MainActivity : AppCompatActivity() {
             }
         }
         cur?.close()
-        phoneDisplayerAdapter = PhoneDisplayerAdapter(abc)
+        phoneDisplayerAdapter = PhoneDisplayerAdapter(abc, object : OnSelectItem {
+            override fun onSelected(position: Int) {
+                showOptions(position)
+            }
+
+        })
         phoneDisplayer.adapter = phoneDisplayerAdapter
 
 
     }
+
+    fun deleteContact(ctx: Context, phone: String?, name: String?): Boolean {
+        val contactUri: Uri =
+            Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phone))
+        val cur: Cursor = ctx.contentResolver.query(contactUri, null, null, null, null)!!
+        try {
+            if (cur.moveToFirst()) {
+                do {
+                    if (cur.getString(cur.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME))
+                            .equals(name)
+                    ) {
+                        val lookupKey: String =
+                            cur.getString(cur.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY))
+                        val uri: Uri = Uri.withAppendedPath(
+                            ContactsContract.Contacts.CONTENT_LOOKUP_URI,
+                            lookupKey
+                        )
+                        ctx.contentResolver.delete(uri, null, null)
+                        return true
+                    }
+                } while (cur.moveToNext())
+            }
+        } catch (e: java.lang.Exception) {
+            println(e.stackTrace)
+        } finally {
+            cur.close()
+        }
+        return false
+    }
+
+    private fun showOptions(position: Int) {
+        val factory = LayoutInflater.from(this)
+        val deleteDialogView = factory.inflate(R.layout.custom_chili_dialog, null)
+        val deleteDialog = AlertDialog.Builder(this).create()
+        deleteDialog.setView(deleteDialogView)
+        deleteDialog.show()
+    }
+
 
     fun openAddContact(view: View) {
         startActivity(Intent(MainActivity@ this, AddContact::class.java))
