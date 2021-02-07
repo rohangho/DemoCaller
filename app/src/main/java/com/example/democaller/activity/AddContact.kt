@@ -1,17 +1,18 @@
 package com.example.democaller.activity
 
 import android.content.ContentProviderOperation
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.democaller.R
 
 class AddContact : AppCompatActivity() {
 
-    private lateinit var name:EditText
+    private lateinit var name: EditText
     private lateinit var number: EditText
     var ops = ArrayList<ContentProviderOperation>()
 
@@ -25,33 +26,50 @@ class AddContact : AppCompatActivity() {
     }
 
     fun addToContact(view: View) {
-        ops.add(ContentProviderOperation.newInsert(
-                ContactsContract.RawContacts.CONTENT_URI)
+        ops.add(
+            ContentProviderOperation.newInsert(
+                ContactsContract.RawContacts.CONTENT_URI
+            )
                 .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
                 .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
-                .build())
-        ops.add(ContentProviderOperation.newInsert(
-                ContactsContract.Data.CONTENT_URI)
+                .build()
+        )
+        ops.add(
+            ContentProviderOperation.newInsert(
+                ContactsContract.Data.CONTENT_URI
+            )
                 .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-                .withValue(ContactsContract.Data.MIMETYPE,
-                        ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
                 .withValue(
-                        ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME,
-                        name.text.toString()).build())
-        ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                    ContactsContract.Data.MIMETYPE,
+                    ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE
+                )
+                .withValue(
+                    ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME,
+                    name.text.toString()
+                ).build()
+        )
+        ops.add(
+            ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
                 .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-                .withValue(ContactsContract.Data.MIMETYPE,
-                        ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                .withValue(
+                    ContactsContract.Data.MIMETYPE,
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE
+                )
                 .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, number.text.toString())
-                .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
-                        ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
-                .build())
+                .withValue(
+                    ContactsContract.CommonDataKinds.Phone.TYPE,
+                    ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE
+                )
+                .build()
+        )
         try {
             contentResolver.applyBatch(ContactsContract.AUTHORITY, ops)
         } catch (e: Exception) {
             e.printStackTrace()
             Toast.makeText(this, "Exception: " + e.message, Toast.LENGTH_SHORT).show()
         }
+
+        startActivity(Intent(AddContact@ this, MainActivity::class.java))
 
     }
 }

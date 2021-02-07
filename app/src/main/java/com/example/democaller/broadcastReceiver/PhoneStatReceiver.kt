@@ -15,10 +15,10 @@ class PhoneStatReceiver : BroadcastReceiver() {
         val telephoneManager: TelephonyManager =
             context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         telephoneManager.listen(
-                MyPhoneState(
-                        context,
-                        (System.currentTimeMillis() / 1000).toString()
-                ), PhoneStateListener.LISTEN_CALL_STATE
+            MyPhoneState(
+                context,
+                (System.currentTimeMillis() / 1000).toString()
+            ), PhoneStateListener.LISTEN_CALL_STATE
         )
     }
 

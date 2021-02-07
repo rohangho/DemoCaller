@@ -16,8 +16,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DemoCaller">
-        <activity android:name=".activity.AddContact"></activity>
-        <activity android:name=".activity.MainActivity">
+        <activity
+            android:name=".activity.AddContact"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.MainActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

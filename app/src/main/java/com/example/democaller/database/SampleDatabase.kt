@@ -12,6 +12,7 @@ abstract class SampleDatabase : RoomDatabase() {
     companion object {
         const val dbName = "BlockNumberDb"
         var detailDatabase: SampleDatabase? = null
+
         @Synchronized
         fun getInstance(context: Context): SampleDatabase? {
             if (detailDatabase == null) {
